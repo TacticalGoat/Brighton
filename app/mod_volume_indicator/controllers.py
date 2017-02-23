@@ -12,6 +12,10 @@ mod_vi = Blueprint('volume_indicator',__name__,url_prefix='/volumes')
 
 @mod_vi.route('/<interval>/<symbol>/',methods=['GET'])
 def volumes(interval,symbol):
+	"""
+		Tried to do utc but apparently I dont understand it enough so for 
+		now bodged together so should work now
+	"""
 	today = datetime.utcnow()
 	current_time = today.time()
 	daily_start_time = dtime(3,45)
@@ -22,17 +26,17 @@ def volumes(interval,symbol):
 	if current_time < daily_start_time:
 		yesterday = today - timedelta(days=1)
 		start_timestamp = time.mktime(datetime(yesterday.year,yesterday.month,yesterday.day,
-													3,45,0,0,tzinfo=pytz.UTC).timetuple())
+													9,15,0,0,tzinfo=pytz.UTC).timetuple())
 		end_timestamp = time.mktime(datetime(yesterday.year,yesterday.month,yesterday.day,
-													10,15,0,0,tzinfo=pytz.UTC).timetuple())
+													15,45,0,0,tzinfo=pytz.UTC).timetuple())
 		intervals = Interval.get_intervals(start_timestamp,end_timestamp,interval)
 		data = Data.get_data(symbol)
 		volume_indicator = Volume.get_volume_indications(intervals,data)
 
 	elif current_time > daily_end_time:
-		start_timestamp = time.mktime(datetime(today.year,today.month,today.day,3,45,0,0,
+		start_timestamp = time.mktime(datetime(today.year,today.month,today.day,9,15,0,0,
 										tzinfo=pytz.UTC).timetuple())
-		end_timestamp = time.mktime(datetime(today.year,today.month,today.day,10,15,0,0,
+		end_timestamp = time.mktime(datetime(today.year,today.month,today.day,15,45,0,0,
 										tzinfo=pytz.UTC).timetuple())
 		intervals = Interval.get_intervals(start_timestamp,end_timestamp,interval)
 		data = Data.get_data(symbol)
@@ -40,8 +44,9 @@ def volumes(interval,symbol):
 
 	else:
 
-		start_timestamp = time.mktime(datetime(today.year,today.month,today.day,3,45,0,0,
+		start_timestamp = time.mktime(datetime(today.year,today.month,today.day,9,15,0,0,
 											tzinfo=pytz.UTC).timetuple())
+		current_time = datetime.now()
 		end_timestamp = time.mktime(datetime(today.year,today.month,today.day,current_time.hour,
 												current_time.minute,0,0,tzinfo=pytz.UTC).timetuple())
 		intervals = Interval.get_intervals(start_timestamp,end_timestamp,interval)
