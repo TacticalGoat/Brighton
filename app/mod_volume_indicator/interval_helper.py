@@ -20,7 +20,7 @@ class Interval():
 			else:
 				step += self.fifteenmin_step
 
-		return intervals
+		return intervals[1:]
 
 class Volume():
 
