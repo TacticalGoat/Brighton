@@ -7,11 +7,14 @@ import pytz
 from datetime import datetime,timedelta,time as dtime
 from app.mod_volume_indicator.interval_helper import Interval,Volume
 from app.mod_volume_indicator.web_helper import Data
+from flask_cors import CORS, cross_origin
 
 mod_vi = Blueprint('volume_indicator',__name__,url_prefix='/volumes')
 
+CORS(mod_vi)
 @mod_vi.route('/<interval>/<symbol>/',methods=['GET'])
 def volumes(interval,symbol):
+
 	"""
 		Tried to do utc but apparently I dont understand it enough so for 
 		now bodged together so should work now
@@ -52,5 +55,5 @@ def volumes(interval,symbol):
 		intervals = Interval.get_intervals(start_timestamp,end_timestamp,interval)
 		data = Data.get_data(symbol)
 		volume_indicator = Volume.get_volume_indications(intervals,data)
-
+        volume_indicator['symbol']=symbol
 	return json.dumps(volume_indicator,sort_keys=True,indent=4,separators=(',',': '))
