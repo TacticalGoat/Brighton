@@ -1,10 +1,8 @@
 class Interval():
-	fifteenmin_step = 896
-	onehour_step = 3596
-	fourhour_step = 14396
+	fifteenmin_step = 900
+	onehour_step = 3600
+	fourhour_step = 14400
 	onemin_step = 58
-	halfhour_step = 1796
-	fivemin_step=298
 
 	@classmethod
 	def get_intervals(self,start_timestamp,end_timestamp,interval):
@@ -20,10 +18,6 @@ class Interval():
 				step += self.fourhour_step
 			elif interval=='1min':
 				step +=self.onemin_step
-			elif interval=='30min':
-				step +=self.halfhour_step
-			elif interval=='5min':
-				step +=self.fivemin_step
 			else:
 				step += self.fifteenmin_step
 
@@ -40,9 +34,9 @@ class Volume():
 		interval_volumes = []
 		interval_averages = []
 		series_count=0
-		interval_count = 0
 		for interval in intervals:
 			interval_volume = 0.0
+			sflag = 0
 			for series in data['series']:
 				if float(series['Timestamp']) < most_recent:
 					continue
@@ -54,11 +48,13 @@ class Volume():
 					total_volume += float(series['volume'])
 					#print(series['volume'])
 					interval_volume += float(series['volume'])
-					series_count += 1
-
+					sflag += 1
 			interval_volumes.append(interval_volume)
-			interval_count += 1
-			interval_averages.append(total_volume/interval_count) 
+			series_count += 1
+			if sflag == 0:
+				interval_averages.append(0.0)
+			else:
+				interval_averages.append(total_volume/series_count) 
 			most_recent = interval
 
 		volume_indications = {}

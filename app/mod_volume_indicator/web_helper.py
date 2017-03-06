@@ -24,3 +24,4 @@ class Data():
 	@classmethod
 	def get_data(self,symbol):
 		return json.loads(self.get_json_data(self.get_url(symbol)))
+
