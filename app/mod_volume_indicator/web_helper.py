@@ -3,8 +3,8 @@ import json
 
 
 class Data():
-	BASE_URI_PREFIX = "http://chartapi.finance.yahoo.com/instrument/1.0/"
-	BASE_URI_SUFFIX = ".NS/chartdata;type=quote;range=1d/json"
+	BASE_URI_PREFIX = "https://partner-query.finance.yahoo.com/v8/finance/chart/"
+	BASE_URI_SUFFIX = ".NS?range=1d&interval=1m"
 	
 	@classmethod
 	def get_url(self,symbol):
@@ -15,7 +15,7 @@ class Data():
 		try:
 			req = requests.get(url)
 			raw = req.text
-			_json = raw[raw.find("(")+1:raw.find(")")]
+			_json = raw
 			return _json
 		except Exception as e:
 			print e

@@ -1,3 +1,5 @@
+import json 
+
 class Interval():
 	fifteenmin_step = 900
 	onehour_step = 3600
@@ -34,20 +36,23 @@ class Volume():
 		interval_volumes = []
 		interval_averages = []
 		series_count=0
-		interval_count = 0
+		interval_count =0 
+		length = len(data['chart']['result'][0]['timestamp'])
+		timestamps = data['chart']['result'][0]['timestamp']
+		volumes=data['chart']['result'][0]['indicators']['quote'][0]['volume']
 		for interval in intervals:
 			interval_volume = 0.0
-			for series in data['series']:
-				if float(series['Timestamp']) < most_recent:
+			for i in range(0,length):
+				if float(timestamps[i]) < most_recent:
 					continue
 
-				elif float(series['Timestamp']) > interval:
+				elif float(timestamps[i]) > interval:
 					break
 
 				else:
-					total_volume += float(series['volume'])
+					total_volume += float(volumes[i])
 					#print(series['volume'])
-					interval_volume += float(series['volume'])
+					interval_volume += float(volumes[i])
 					series_count += 1
 
 			interval_volumes.append(interval_volume)
