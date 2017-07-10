@@ -1,10 +1,12 @@
 import json 
 
 class Interval():
-	fifteenmin_step = 900
-	onehour_step = 3600
-	fourhour_step = 14400
+	fifteenmin_step = 896
+	onehour_step = 3596
+	fourhour_step = 14396
 	onemin_step = 58
+	halfhour_step = 1796
+	fivemin_step=298
 
 	@classmethod
 	def get_intervals(self,start_timestamp,end_timestamp,interval):
@@ -20,6 +22,10 @@ class Interval():
 				step += self.fourhour_step
 			elif interval=='1min':
 				step +=self.onemin_step
+			elif interval=='30min':
+				step +=self.halfhour_step
+			elif interval=='5min':
+				step +=self.fivemin_step
 			else:
 				step += self.fifteenmin_step
 
